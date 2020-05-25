@@ -1,7 +1,7 @@
 MusicTheory [![Build Status](https://travis-ci.org/cemolcay/MusicTheory.svg?branch=master)](https://travis-ci.org/cemolcay/MusicTheory)
 ===
 
-A music theory library with `Note`, `Interval`, `Scale` and `Chord` representations in swift enums.
+A music theory library with `Key`, `Pitch`, `Interval`, `Scale` and `Chord` representations in swift enums.
 
 Requirements
 ----
@@ -14,34 +14,56 @@ Requirements
 Install
 ----
 
+### CocoaPods
+
 ```
 pod 'MusicTheorySwift'
+```
+
+### Swift Package Manager
+
+``` swift
+let package = Package(
+  name: ...
+  dependencies: [
+    .package(url: "https://github.com/cemolcay/MusicTheory.git")
+  ],
+  targets: ...
+)
 ```
 
 Usage
 ----
 
-`MusicTheory` adds a bunch of basic enums and structs that you can define pretty much any music related data. Most importants are `Note`, `Scale` and `Chord`.
+`MusicTheory` adds a bunch of basic enums and structs that you can define pretty much any music related data. Most importants are `Pitch`, `Key`, `Scale` and `Chord`.   
 
-#### `NoteType` and `Note`
+All data types conforms `Codable`, `CustomStringConvertable`.  
+`Pitch`, and `Accident` structs are `RawPresentable` with `Int` as well as `ExpressibleByIntegerLiteral` that you can represent them directly with `Int`s.
 
-- All notes defined in `NoteType` enum.
-- You can create `Note`s with `NoteType`s and octaves.
-- Also, you can create `Note`s with MIDI note index.
-- Notes and NoteTypes are equatable, `+` and `-` custom operators defined for making calulations easier.
+#### `Pitch` and `Key`
+
+- All keys can be defined with `Key` struct. 
+- It has a `KeyType` where you can set the base key like C, D, A, G, and an `Accidental` where it can be `.natural`, `.flat`, `sharp` or more specific like `.sharps(amount: 3)`.
+- You can create `Pitch`es with a `Key` and octave.
+- Also, you can create `Pitch`es with MIDI note number. `rawValue` of a pitch is its MIDI note number.
+- `Pitch`, `Key`, `Accidental` structs are equatable, `+` and `-` custom operators defined for making calculations easier.
 - Also, there are other helper functions or properties like frequency of a note.
+- You can define them with directly string representations as well.
 
 ``` swift
-let d: NoteType = .d
-let c = Note(type: .c, octave: 0)
+let dFlat = Key(type: d, accidental: .flat)
+let c4 = Pitch(key: Key(type: .c), octave: 4)
+let aSharp: Key = "a#" // Key(type: .a, accidental: .sharp)
+let gFlat3: Pitch = "gb3" // or "g♭3" or "Gb3" is Pitch(key: (type: .g, accidental: .flat), octave: 3)
 ```
 
 #### `Interval`
 
-- Intervals are halfsteps between notes.
-- They are `IntegerLiteral` and you can make add/subsctract them between themselves, notes or note types.
+- Intervals are halfsteps between pitches.
+- They are `IntegerLiteral` and you can make add/substract them between themselves, notes or note types.
+- You can build up a custom interval with its quality, degree and semitone properties.
 - You can build scales or chords from intervals.
-- m2, M2, m3, M3, P4, d5, P5, m6, M6, m7, M7 and P8 are predefined intervals.
+- Minor, major, perfect, augmented and diminished intervals up to 2 octaves are predefined.
 
 #### `ScaleType` and `Scale`
 
@@ -53,7 +75,7 @@ let c = Note(type: .c, octave: 0)
 - Harmonic field is all possible triad, tetrad or extended chords in a scale.
 
 ``` swift
-let c: NoteType = .c
+let c = Key(type: .c)
 let maj: ScaleType = .major
 let cMaj = Scale(type: maj, key: c)
 ```
@@ -75,7 +97,18 @@ let m13 = ChordType(
   extensions: [
     ChordExtensionType(type: .thirteenth)
   ])
-let cm13 = Chord(type: m13, key: .c)
+let cm13 = Chord(type: m13, key: Key(type: .c))
+```
+
+- You can generate chord progressions with `ChordProgression` enum.
+- For any scale, in any harmonic field, for any inversion.
+
+``` swift
+let progression = ChordProgression.i_ii_vi_iv
+let cSharpHarmonicMinorTriadsProgression = progression.chords(
+  for: cSharpHarmonicMinor,
+  harmonicField: .triad,
+  inversion: 0)
 ```
 
 #### `Tempo` and `TimeSignature`
@@ -102,4 +135,8 @@ AppStore
 This library battle tested in my apps for iOS, macOS, watchOS and tvOS, check them out!  
 [KeyBud](https://itunes.apple.com/us/app/keybud-music-theory-app/id1203856335?mt=8) (iOS, watchOS, tvOS, macOS)  
 [FretBud](https://itunes.apple.com/us/app/fretbud-chord-scales-for-guitar-bass-and-more/id1234224249?mt=8) (iOS, watchOS, tvOS)  
-[ChordBud](https://itunes.apple.com/us/app/chordbud-chord-progressions/id1313017378?mt=8) (iOS)
+[ChordBud](https://itunes.apple.com/us/app/chordbud-chord-progressions/id1313017378?mt=8) (iOS)  
+[ArpBud](https://itunes.apple.com/us/app/arpbud-midi-sequencer-more/id1349342326?ls=1&mt=8) (iOS)  
+[ScaleBud](https://itunes.apple.com/us/app/scalebud-auv3-midi-keyboard/id1409125865?ls=1&mt=8) (iOS, AUv3)  
+[StepBud](https://itunes.apple.com/us/app/stepbud-auv3-midi-sequencer/id1453104408?mt=8) (iOS, AUv3)  
+[RhythmBud](https://apps.apple.com/us/app/rhythmbud-auv3-midi-fx/id1484320891#) (iOS, AUv3)
