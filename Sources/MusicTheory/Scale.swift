@@ -41,11 +41,11 @@ public struct ScaleType: Equatable, CustomStringConvertible {
   /// Phrygian scale.
   public static let phrygian = ScaleType(intervals: [.P1, .m2, .m3, .P4, .P5, .m6, .m7], description: "Phrygian")
   /// Lydian scale.
-  public static let lydian = ScaleType(intervals: [.P1, .M2, .M3, .d5, .P5, .M6, .M7], description: "Lydian")
+  public static let lydian = ScaleType(intervals: [.P1, .M2, .M3, .A4, .P5, .M6, .M7], description: "Lydian")
   /// Locrian scale.
   public static let locrian = ScaleType(intervals: [.P1, .m2, .m3, .P4, .d5, .m6, .m7], description: "Locrian")
   /// Half diminished scale.
-  public static let dimHalf = ScaleType(intervals: [.P1, .m2, .m3, .M3, .d5, .P5, .M6, .m7], description: "Half Diminished")
+  public static let dimHalf = ScaleType(intervals: [.P1, .m2, .m3, .M3, .A4, .P5, .M6, .m7], description: "Half Diminished")
   /// Whole diminished scale.
   public static let dimWhole = ScaleType(intervals: [.P1, .M2, .m3, .P4, .d5, .m6, .M6, .M7], description: "Whole Diminished")
   /// Whole scale.
